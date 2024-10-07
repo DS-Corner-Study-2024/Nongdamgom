@@ -1,13 +1,16 @@
-package service;
+package com.example.hello_spring.service;
 
-import domain.Member;
+import com.example.hello_spring.domain.Member;
+import com.example.hello_spring.repository.MemoryMemberRepository;
+import com.example.hello_spring.service.MemberService;
+
 //import org.junit.jupiter.api.Assertions;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repository.MemoryMemberRepository;
+
 
 import java.util.Optional;
 
