@@ -1,0 +1,15 @@
+DTO: Data Transfer Object, 다른 레이어 간의 데이터 교환에 활용됨,
+각 클래스 및 인터페이스를 호출하면서 전달하는 매개변수로 사용되는 데이터 객체
+
+로깅(logging): 애플리케이션이 동작하는 동안 시스템의 상태나 동작 정보를 시간순으로 기록함
+자바 진영에서 가장 많이 사용되는 로깅 프레임워크: Logback
+Logback 특징
+크게 5개의 로그 레벨(TRACE, DEBUG, INFO, WARN, ERROR) 설정 가능
+실제 운영 환경과 개발 환경에서 각각 다른 출력 레벨을 설정해서 로그 확인 가능
+Logback의 설정 파일을 일정 시간마다 스캔해서 애플리케이션을 재가동하지 않아도 설정 변경 가능
+별도의 프로그램 지원 없이도 자체적으로 로그 파일 압축 가능
+저장된 로그 파일에 대한 보관 기간 등을 설정해서 관리 가능
+
+Appender 영역: 로그의 형태를 설정하고 어떤 방법으로 출력할지 설정하는 곳
+ㄴ대표적인 구현체: ConsoleAppender, FileAppender, RollingFileAppender, SMTPAppender, DBAppender
+Root 영역: 설정 파일에 정의된 Appender를 활용하려면 Root 영역에서 Appender를 참고해서 로깅 레벨을 정함
