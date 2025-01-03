@@ -1,0 +1,71 @@
+8.1 프로젝트 생성
+설정
+name: advanced_jpa
+Developer Tools: Lombok, Spring Configuration Processor
+Web: Spring Web
+SQL: Spring Data JPA,  MariaDB Driver
+
+8.2 JPQL
+JPA Query Language, JPA에서 사용할 수 있는 쿼리
+JPQL의 문법은 SQL과 매우 비슷함, SQL과의 차이점- SQL에서는 테이블이나 칼럼의 이름을 사용하는 것과 달리 JPQL은 엔티티 객체를 대상으로 수행하는 쿼리-> 매핑된 엔티티의 이름과 필드를 사용
+
+8.3 쿼리 메서드 살펴보기
+쿼리 메서드- 주제 & 서술어로 구분
+키워드로 쿼리의 주제 정함, 서술어- 검색 & 정렬 조건을 지정하는 영역, 기본적으로 엔티티의 속성으로 정의 가능, AND or OR을 사용해 조건 확장도 가능
+
+쿼리 메서드 주요 키워드
+find...By, read...By, get...By, query...By, search...By, stream...By
+조회하는 기능을 수행, ...-> 도메인(엔티티)을 표현할 수 있음
+
+exists...By: 특정 데이터가 존재하는지 확인, 리턴 타입- boolean
+count...By: 조회 쿼리 수행 후 결과로 나온 레코드의 개수 리턴
+delete...By, remove...By: 삭제 쿼리 수행, 리턴 타입 X or 삭제한 횟수 리턴
+
+...First<number>..., ...Top<number>...: 쿼리를 통해 조회된 결괏값의 개수 제한, 단 건 조회시 <number> 생략
+
+Is: 값의 일치를 조건으로 사용하는 조건자 키워드, 생략되는 경우 多, Equals와 동일한 기능 수행
+(Is)Not: 값의 불일치를 조건으로 사용하는 조건자 키워드, Is 생략 & Not 키워드만 사용 가능
+(Is)Null, (Is)NotNull: 값이 null인지 검사하는 조건자 키워드
+(Is)True, (Is)False: boolean 타입으로 지정된 칼럼값을 확인하는 키워드
+And, Or: 여러 조건을 묶을 때 사용
+(Is)GreaterThan, (Is)LessThan, (Is)Between: 숫자나 datetime 칼럼을 대상으로 한 비교 연산에 사용할 수 있는 조건자 키워드
+(Is)StartingWith(==StartsWith), (Is)EndingWith(==EndsWith), (Is)Containing(==Contains), (Is)Like: 칼럼값에서 일부 일치 여부를 확인하는 키워드
+
+8.4 정렬과 페이징 처리
+일반적인 쿼리문에서 정렬 사용-> ORDER BY 구문 사용
+오름차순 정렬 Asc, 내림차순 정렬 Desc
+페이징: 데이터베이스의 레코드를 개수로 나눠 페이지를 구분하는 것
+
+8.5 @Query 어노테이션 사용하기
+데이터베이스에서 값을 가져올 때는 메서드 이름만으로 쿼리 메서드를 생성할 수도 있고 @Query 어노테이션을 사용해 직접 JPQL을 작성할 수도 있음
+@Query("SELECT p FROM Product AS p WHERE p.name = ?1")
+List<Product> findByName(String name);
+
+@Query("SELECT p FROM Product p WHERE p.name = :name")
+List<Product> findByName(@Param("name") String name);
+
+8.6 QueryDSL 적용하기
+QueryDSL: 정적 타입을 이용해 SQL과 같은 쿼리를 생성할 수 있도록 지원하는 프레임워크
+장점
+- IDE가 제공하는 코드 자동 완성 기능 사용 가능
+- 문법적으로 잘못된 쿼리를 허용x, 정상적으로 활용된 QueryDSL은 문법 오류를 발생시키지x
+- 고정된 SQL 쿼리를 작성x, 동적으로 쿼리 생성 가능
+- 코드로 작성-> 가독성 및 생산성 향상
+- 도메인 타입과 프로퍼티 안전하게 참조 가능
+
+APT(Annotation Processing Tool): 어노테이션으로 정의된 코드를 기반으로 새로운 코드를 생성하는 기능
+
+반환 메서드로 사용할 수 있는 메서드
+- List<T> fetch(): 조회 결과를 리스트로 반환
+- T fetchOne: 단 건의 조회 결과 반환
+- T fetchFirst(): 여러 건의 조회 결과 중 1건 반환
+- Long fetchCount(): 조회 결과의 개수 반환
+- QueryResult<T> fetchResults(): 조회 결과 리스트와 개수를 포함한 QueryResults를 반환
+
+8.7 JPA Auditing 적용
+JPA에서 'Audit': '감시하다'라는 뜻, 각 데이터마다 '누가', '언제' 데이터를 생성했고 변경했는지 감시한다는 의미로 사용됨
+엔티티 클래스에 들어가는 필드 中 대표적으로 多 사용되는 필드
+- 생성 주체
+- 생성 일자
+- 변경 주체
+- 변경 일자
