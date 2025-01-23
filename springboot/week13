@@ -1,0 +1,58 @@
+RestTemplate: 스프링에서 HTTP 통신 기능을 손쉽게 사용하도록 설계된 템플릿
+이 템플릿을 사용하면 RESTful 원칙을 따르는 서비스를 편리하게 만들 수 있음
+기본적으로 동기 방식으로 처리
+비동기 방식으로 사용하고 싶을 경우=> AsyncRestTemplate을 사용하면 됨
+
+RestTemplate 특징
+- HTTP 프로토콜의 메서드에 맞는 여러 메서드 제공
+- RESTful 형식을 갖춘 템플릿
+- HTTP 요청 후 JSON, XML, 문자열 등의 다양한 형식으로 응답 받을 수 있음
+- 블로킹(blocking) I/O 기반의 동기 방식 사용
+- 다른 API를 호출할 때 HTTP 헤더에 다양한 값을 설정할 수 있음
+
+RestTemplate의 대표적인 메서드
+- getForObject: GET 형식으로 요청한 결과를 객체로 반환
+- getForEntity: GET 형식으로 요청한 결과를 ResponseEntity 결과로 반환
+- postForLocation: POST 형식으로 요청한 결과를 헤더에 저장된 URI로 반환
+- postForObject: POST 형식으로 요청한 결과를 객체로 반환
+- postForEntity: POST 형식으로 요청한 결과를 ResponseEntity 형식으로 반환
+- delete: DELETE 형식으로 요청
+- put: PUT 형식으로 요청
+- patchForObject: PATCH 형식으로 요청한 결과를 객체로 반환
+- optionsForAllow(OPTION): HTTP 헤더를 임의로 추가할 수 있고, 어떤 메서드 형식에서도 사용 가능
+- exchange(any): HTTP 헤더를 임의로 추가할 수 있고, 어떤 메서드 형식에서도 사용 가능
+- execute(any): 요청과 응답에 대한 콜백을 수정
+
+RestTemplate은 HTTPClient를 추상화하고 있음
+HttpClient의 종류에 따라 기능에 차이 O, 가장 큰 차이=> 커넥션 풀(Connection Poll)
+RestTemplate은 기본적으로 커넥션 풀을 지원X
+이 기능을 지원하지 않으면 매번 호출할 때 마다 포트를 열어 커넥션을 생성하게 됨
+TIME_WAIT 상태가 된 소켓을 다시 사용하려고 접근한다면 재사용하지 못하게 됨
+이를 방지하기 위해서는 커넥션 풀 기능을 활성화해서 재사용할 수 있게 하는 것이 좋음
+이 기능을 활성화하는 가장 대표적인 방법=> 아파치에서 제공하는 HttpClient로 대체해서 사용하는 방식
+
+WebClient
+일반적으로 실제 운영 환경에 적용되는 애플리케이션은 낮은 버전의 스프링 부트를 사용할 때가 많음
+때문에 RestTemplate을 많이 사용하고 있지만, 최신 버전에서는 RestTemplate이 지원 중단되어 WebClient를 사용할 것을 권고 중임
+이러한 흐름에 맞춰 현재 빈번히 가용되고 있는 RestTemplate & 앞으로 많이 사용될 WebClient를 모두 알고 있는 것이 좋음
+
+WebClient의 특징
+- Spring WebFlux=> HTTP 요청을 수행하는 클라이언트로 WebClient 제공
+- WebClient: 리액터(Reactor) 기반으로 동작하는 API
+- 리액터 기반이므로 스레드와 동시성 문제를 벗어나 비동기 형식으로 사용할 수 있음
+WebClient의 주요 특징
+- 논블로킹(Non-Blocking) I/O 지원
+- 리액티브 스트림(Reactive Streams)의 백프레셔(Back Pressure) 지원
+- 적은 하드웨어 리소스로 동시성 지원
+- 함수형 API 지원
+- 동기, 비동기 상호작용 지원
+- 스트리밍 지원
+
+WebClient는 우선 객체를 생성한 후 요청을 전달하는 방식으로 동작함
+이를 위해 builder()를 통해 baseUrl() 메서드에서 기본 URL 설정 & defaultHeader() 메서드로 헤더의 값을 설정함
+일반적으로 WebClient 객체를 이용할 때는 WebClient 객체를 생성한 후 재사용하는 방식으로 구현하는 것이 좋음
+예제에서 소개된 메서드 외에 builder()를 사용할 경우 확장할 수 있는 메서드
+- defaultHeader(): WebClient의 기본 헤더 설정
+- defaultCookie(): WebClient의 기본 쿠키 설정
+- defaultUriVariable(): WebClient의 기본 URI 확장값 설정
+- filter(): WebClient에서 발생하는 요청에 대한 필터 설정
